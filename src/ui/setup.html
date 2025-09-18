@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offlinio Setup - First Run Configuration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .setup-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .setup-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .setup-step {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #4ecdc4;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .step-number {
+            background: #4ecdc4;
+            color: #1e3c72;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.3);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            margin-top: 10px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 12px;
+            margin-top: 4px;
+        }
+
+        .validation-message {
+            margin-top: 8px;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .validation-success {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid #2ecc71;
+            color: #2ecc71;
+        }
+
+        .validation-error {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+        }
+
+        .validation-warning {
+            background: rgba(241, 196, 15, 0.2);
+            border: 1px solid #f1c40f;
+            color: #f1c40f;
+        }
+
+        .legal-notice {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .path-suggestions {
+            margin-top: 10px;
+        }
+
+        .path-suggestion {
+            display: block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .path-suggestion:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #4ecdc4;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: -1;
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .progress-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active .progress-dot {
+            background: #4ecdc4;
+            color: #1e3c72;
+        }
+
+        .progress-step.completed .progress-dot {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #4ecdc4;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="setup-container">
+        <div class="setup-header">
+            <div class="logo">Offlinio</div>
+            <div class="subtitle">Personal Media Downloader - First Run Setup</div>
+        </div>
+
+        <div class="progress-steps">
+            <div class="progress-step active" id="step-legal-progress">
+                <div class="progress-dot">1</div>
+                <div>Legal</div>
+            </div>
+            <div class="progress-step" id="step-storage-progress">
+                <div class="progress-dot">2</div>
+                <div>Storage</div>
+            </div>
+            <div class="progress-step" id="step-token-progress">
+                <div class="progress-dot">3</div>
+                <div>Real-Debrid</div>
+            </div>
+            <div class="progress-step" id="step-complete-progress">
+                <div class="progress-dot">4</div>
+                <div>Complete</div>
+            </div>
+        </div>
+
+        <!-- Step 1: Legal Notice -->
+        <div id="step-legal" class="setup-step">
+            <div class="step-title">
+                <span class="step-number">1</span>
+                Legal Agreement
+            </div>
+            
+            <div class="legal-notice">
+                <h4>🛡️ Important Legal Notice</h4>
+                <p><strong>You must have legal rights to download any content.</strong></p>
+                
+                <h5>✅ ACCEPTABLE USES:</h5>
+                <ul>
+                    <li>Personal backups of content you own</li>
+                    <li>Public domain materials</li>
+                    <li>Creative Commons licensed content</li>
+                    <li>Content from your authorized providers</li>
+                    <li>Your own user-generated content</li>
+                </ul>
+                
+                <h5>❌ THIS TOOL WILL NOT:</h5>
+                <ul>
+                    <li>Bypass DRM or access controls</li>
+                    <li>Provide links to unauthorized content</li>
+                    <li>Index or catalog content sources</li>
+                </ul>
+                
+                <p><strong>By continuing, you confirm you will only download content you have legal rights to access.</strong></p>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="legal-agreement" required>
+                <label for="legal-agreement">I understand and agree to these terms. I will only download content I have legal rights to access.</label>
+            </div>
+
+            <button class="btn" id="legal-continue" disabled>Continue to Storage Setup</button>
+        </div>
+
+        <!-- Step 2: Storage Configuration -->
+        <div id="step-storage" class="setup-step hidden">
+            <div class="step-title">
+                <span class="step-number">2</span>
+                Storage Configuration
+            </div>
+            
+            <div class="form-group">
+                <label for="storage-path">Download Directory:</label>
+                <input type="text" id="storage-path" placeholder="/path/to/your/downloads" required>
+                <div class="path-suggestions">
+                    <small>Suggested paths for your platform:</small>
+                    <div id="suggested-paths"></div>
+                </div>
+                <div id="storage-validation" class="validation-message hidden"></div>
+            </div>
+
+            <button class="btn" id="validate-storage">Validate & Continue</button>
+            <button class="btn btn-secondary" id="storage-back">Back</button>
+        </div>
+
+        <!-- Step 3: Download Mode Selection -->
+        <div id="step-token" class="setup-step hidden">
+            <div class="step-title">
+                <span class="step-number">3</span>
+                Download Mode Selection
+            </div>
+            
+            <div style="margin-bottom: 30px;">
+                <h4>Choose your download method:</h4>
+                
+                <div class="form-group">
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 250px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; cursor: pointer;" onclick="selectMode('skip')">
+                            <h5>🎯 Direct URLs Only (Recommended)</h5>
+                            <p style="font-size: 14px; margin: 10px 0;">
+                                ✅ Use your existing Stremio setup<br>
+                                ✅ Download from any direct links<br>
+                                ✅ No additional accounts needed<br>
+                                ✅ Privacy-focused approach
+                            </p>
+                            <input type="radio" name="download-mode" value="direct" checked>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 250px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; cursor: pointer;" onclick="selectMode('realDebrid')">
+                            <h5>🚀 Real-Debrid Integration</h5>
+                            <p style="font-size: 14px; margin: 10px 0;">
+                                ✅ Enhanced download speeds<br>
+                                ✅ Magnet link processing<br>
+                                ✅ Premium file access<br>
+                                ⚠️ Requires separate API token
+                            </p>
+                            <input type="radio" name="download-mode" value="realdebrid">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="rd-token-section" class="hidden" style="margin-bottom: 20px;">
+                <p style="margin-bottom: 15px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                    <strong>Why is this needed?</strong><br>
+                    Torrentio uses Real-Debrid for streaming, but Offlinio needs direct API access to download files to your device. 
+                    This requires your personal API token (not shared between addons for security).
+                </p>
+
+            <div class="form-group">
+                <label for="rd-token">Real-Debrid API Token:</label>
+                <input type="password" id="rd-token" placeholder="Your Real-Debrid API token">
+                <small style="display: block; margin-top: 5px; opacity: 0.8;">
+                    Get your token from: <a href="https://real-debrid.com/apitoken" target="_blank" style="color: #4ecdc4;">https://real-debrid.com/apitoken</a>
+                </small>
+                <div id="token-validation" class="validation-message hidden"></div>
+            </div>
+
+            <button class="btn" id="continue-with-mode">Continue</button>
+            <button class="btn btn-secondary" id="token-back">Back</button>
+        </div>
+
+        <!-- Step 4: Completion -->
+        <div id="step-complete" class="setup-step hidden">
+            <div class="step-title">
+                <span class="step-number">4</span>
+                Setup Complete
+            </div>
+            
+            <div id="setup-summary">
+                <p>✅ Setup completed successfully!</p>
+                <p>Your Offlinio addon is now ready to use.</p>
+                
+                <div style="margin: 20px 0;">
+                    <h4>Installation Options:</h4>
+                    
+                    <div style="display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
+                        <button class="btn" id="install-stremio" style="flex: 1; min-width: 200px;">
+                            🚀 Open Stremio & Install Addon
+                        </button>
+                        <button class="btn btn-secondary" id="copy-addon-url" style="flex: 1; min-width: 200px;">
+                            📋 Copy Addon URL
+                        </button>
+                    </div>
+                    
+                    <div id="manual-instructions" class="hidden" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <h5>Manual Installation:</h5>
+                        <p><strong>Addon URL:</strong> <code id="addon-url-display">http://127.0.0.1:11471/manifest.json</code></p>
+                        <ol style="margin-left: 20px; line-height: 1.6;">
+                            <li>Copy the addon URL above</li>
+                            <li>Open Stremio → Add-ons → Add Addon</li>
+                            <li>Paste the URL and install</li>
+                            <li>Look for "Download for Offline" in stream options</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary" id="finish-setup">Open Dashboard Later</button>
+        </div>
+    </div>
+
+    <script>
+        // Setup wizard state management
+        let currentStep = 1;
+        let setupData = {};
+
+        // Initialize setup wizard
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check if setup is required
+            try {
+                const response = await fetch('/api/setup/required');
+                const data = await response.json();
+                
+                if (!data.required) {
+                    // Setup already completed, redirect to main UI
+                    window.location.href = '/ui/';
+                    return;
+                }
+            } catch (error) {
+                console.error('Failed to check setup status:', error);
+            }
+
+            // Load suggested storage paths
+            loadSuggestedPaths();
+
+            // Setup event listeners
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Legal agreement
+            document.getElementById('legal-agreement').addEventListener('change', function() {
+                const continueBtn = document.getElementById('legal-continue');
+                continueBtn.disabled = !this.checked;
+                if (this.checked) {
+                    continueBtn.style.opacity = '1';
+                    continueBtn.style.cursor = 'pointer';
+                } else {
+                    continueBtn.style.opacity = '0.6';
+                    continueBtn.style.cursor = 'not-allowed';
+                }
+            });
+
+            document.getElementById('legal-continue').addEventListener('click', function() {
+                setupData.legalAccepted = true;
+                goToStep(2);
+            });
+
+            // Storage validation
+            document.getElementById('validate-storage').addEventListener('click', validateStorage);
+            document.getElementById('storage-back').addEventListener('click', () => goToStep(1));
+
+            // Mode selection
+            document.getElementById('continue-with-mode').addEventListener('click', handleModeSelection);
+            document.getElementById('token-back').addEventListener('click', () => goToStep(2));
+
+            // Completion
+            document.getElementById('finish-setup').addEventListener('click', completeSetup);
+            document.getElementById('install-stremio').addEventListener('click', installToStremio);
+            document.getElementById('copy-addon-url').addEventListener('click', copyAddonUrl);
+        }
+
+        async function loadSuggestedPaths() {
+            try {
+                const response = await fetch('/api/setup/storage/defaults');
+                const data = await response.json();
+                
+                const container = document.getElementById('suggested-paths');
+                container.innerHTML = '';
+                
+                data.paths.forEach(path => {
+                    const suggestion = document.createElement('a');
+                    suggestion.className = 'path-suggestion';
+                    suggestion.textContent = path;
+                    suggestion.href = '#';
+                    suggestion.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.getElementById('storage-path').value = path;
+                    });
+                    container.appendChild(suggestion);
+                });
+            } catch (error) {
+                console.error('Failed to load suggested paths:', error);
+            }
+        }
+
+        async function validateStorage() {
+            const path = document.getElementById('storage-path').value.trim();
+            const button = document.getElementById('validate-storage');
+            const validation = document.getElementById('storage-validation');
+
+            if (!path) {
+                showValidation(validation, 'error', 'Please enter a storage directory path');
+                return;
+            }
+
+            button.disabled = true;
+            button.innerHTML = '<span class="loading"></span> Validating...';
+
+            try {
+                const response = await fetch('/api/setup/storage/validate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path })
+                });
+
+                const data = await response.json();
+
+                if (data.valid) {
+                    setupData.storageDirectory = path;
+                    showValidation(validation, 'success', 'Storage directory validated successfully!');
+                    setTimeout(() => goToStep(3), 1000);
+                } else {
+                    const errors = data.errors.join(', ');
+                    showValidation(validation, 'error', `Validation failed: ${errors}`);
+                }
+            } catch (error) {
+                showValidation(validation, 'error', 'Failed to validate storage directory');
+                console.error('Storage validation error:', error);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Validate & Continue';
+            }
+        }
+
+        async function handleModeSelection() {
+            const mode = document.querySelector('input[name="download-mode"]:checked').value;
+            const button = document.getElementById('continue-with-mode');
+
+            if (mode === 'direct') {
+                // Direct URLs only - no token needed
+                setupData.downloadMode = 'direct';
+                goToStep(4);
+                return;
+            }
+
+            if (mode === 'realdebrid') {
+                // Validate Real-Debrid token
+                const token = document.getElementById('rd-token').value.trim();
+                const validation = document.getElementById('token-validation');
+
+                if (!token) {
+                    showValidation(validation, 'error', 'Please enter your Real-Debrid API token');
+                    return;
+                }
+
+                button.disabled = true;
+                button.innerHTML = '<span class="loading"></span> Validating...';
+
+                try {
+                    const response = await fetch('/api/setup/token/validate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ token })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.valid) {
+                        setupData.downloadMode = 'realdebrid';
+                        setupData.realDebridToken = token;
+                        showValidation(validation, 'success', `Token validated! Account: ${data.accountInfo?.username || 'Unknown'}`);
+                        setTimeout(() => goToStep(4), 1000);
+                    } else {
+                        showValidation(validation, 'error', `Token validation failed: ${data.error}`);
+                    }
+                } catch (error) {
+                    showValidation(validation, 'error', 'Failed to validate token');
+                    console.error('Token validation error:', error);
+                } finally {
+                    button.disabled = false;
+                    button.textContent = 'Continue';
+                }
+            }
+        }
+
+        function selectMode(mode) {
+            const radios = document.querySelectorAll('input[name="download-mode"]');
+            const tokenSection = document.getElementById('rd-token-section');
+            
+            radios.forEach(radio => {
+                if (radio.value === (mode === 'skip' ? 'direct' : mode)) {
+                    radio.checked = true;
+                }
+            });
+
+            if (mode === 'realDebrid') {
+                tokenSection.classList.remove('hidden');
+            } else {
+                tokenSection.classList.add('hidden');
+            }
+        }
+
+        async function completeSetup() {
+            const button = document.getElementById('finish-setup');
+            button.disabled = true;
+            button.innerHTML = '<span class="loading"></span> Completing Setup...';
+
+            try {
+                const response = await fetch('/api/setup/complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(setupData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = data.redirect || '/ui/';
+                } else {
+                    throw new Error(data.error || 'Setup completion failed');
+                }
+            } catch (error) {
+                alert('Setup completion failed: ' + error.message);
+                console.error('Setup completion error:', error);
+                button.disabled = false;
+                button.textContent = 'Open Offlinio Dashboard';
+            }
+        }
+
+        function goToStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.setup-step').forEach(el => el.classList.add('hidden'));
+            
+            // Show target step
+            document.getElementById(`step-${getStepName(step)}`).classList.remove('hidden');
+            
+            // Update progress indicators
+            updateProgress(step);
+            
+            currentStep = step;
+        }
+
+        function getStepName(step) {
+            const names = { 1: 'legal', 2: 'storage', 3: 'token', 4: 'complete' };
+            return names[step];
+        }
+
+        function updateProgress(activeStep) {
+            const steps = ['legal', 'storage', 'token', 'complete'];
+            
+            steps.forEach((stepName, index) => {
+                const stepElement = document.getElementById(`step-${stepName}-progress`);
+                const stepNumber = index + 1;
+                
+                stepElement.classList.remove('active', 'completed');
+                
+                if (stepNumber === activeStep) {
+                    stepElement.classList.add('active');
+                } else if (stepNumber < activeStep) {
+                    stepElement.classList.add('completed');
+                    stepElement.querySelector('.progress-dot').textContent = '✓';
+                }
+            });
+        }
+
+        function showValidation(element, type, message) {
+            element.className = `validation-message validation-${type}`;
+            element.textContent = message;
+            element.classList.remove('hidden');
+        }
+
+        // Stremio SDK Integration Functions
+        async function installToStremio() {
+            const addonUrl = 'http://127.0.0.1:11471/manifest.json';
+            const stremioUrl = `stremio://install/${encodeURIComponent(addonUrl)}`;
+            
+            try {
+                // Try to open Stremio directly (works on desktop)
+                window.location.href = stremioUrl;
+                
+                // Show success message
+                setTimeout(() => {
+                    alert('✅ Addon installation opened in Stremio!\n\nIf Stremio didn\'t open automatically, copy the addon URL manually.');
+                    document.getElementById('manual-instructions').classList.remove('hidden');
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Failed to open Stremio:', error);
+                // Fallback to manual instructions
+                document.getElementById('manual-instructions').classList.remove('hidden');
+                alert('⚠️ Please install manually using the addon URL below.');
+            }
+        }
+
+        async function copyAddonUrl() {
+            const addonUrl = 'http://127.0.0.1:11471/manifest.json';
+            
+            try {
+                await navigator.clipboard.writeText(addonUrl);
+                
+                // Update button text temporarily
+                const button = document.getElementById('copy-addon-url');
+                const originalText = button.textContent;
+                button.textContent = '✅ Copied!';
+                button.style.background = '#2ecc71';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+                
+                // Show manual instructions
+                document.getElementById('manual-instructions').classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('Failed to copy to clipboard:', error);
+                // Fallback: show the URL prominently
+                document.getElementById('manual-instructions').classList.remove('hidden');
+                document.getElementById('addon-url-display').style.background = '#4ecdc4';
+                document.getElementById('addon-url-display').style.color = '#1e3c72';
+                document.getElementById('addon-url-display').style.padding = '5px';
+                alert('📋 Addon URL is highlighted below - please copy it manually.');
+            }
+        }
+
+        async function completeSetup() {
+            // Just complete the setup, don't redirect immediately
+            const button = document.getElementById('finish-setup');
+            button.disabled = true;
+            button.innerHTML = '<span class="loading"></span> Completing Setup...';
+
+            try {
+                const response = await fetch('/api/setup/complete', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(setupData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Show completion message instead of redirecting
+                    alert('✅ Setup completed! You can now close this window and use the addon in Stremio.');
+                    button.textContent = '✅ Setup Complete';
+                    button.disabled = false;
+                } else {
+                    throw new Error(data.error || 'Setup completion failed');
+                }
+            } catch (error) {
+                alert('Setup completion failed: ' + error.message);
+                console.error('Setup completion error:', error);
+                button.disabled = false;
+                button.textContent = 'Open Dashboard Later';
+            }
+        }
+    </script>
+</body>
+</html>

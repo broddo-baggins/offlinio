@@ -1,0 +1,109 @@
+// Offlinio Database Schema
+// SQLite-based schema for single-addon architecture
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./offlinio.db"
+}
+
+model Content {
+  id          String   @id @default(cuid())
+  imdbId      String?  @unique
+  type        String   // 'movie' or 'series'
+  title       String
+  year        Int?
+  genre       String?
+  description String?
+  posterUrl   String?
+  filePath    String?  // relative path under DATA_DIR
+  fileSize    BigInt?
+  quality     String?  // e.g. 1080p, 720p, 4K
+  status      String   // downloading, completed, failed, paused
+  progress    Int      @default(0) // 0-100
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Series-specific fields
+  seriesId String? // series identifier if this row is an episode
+  season   Int?
+  episode  Int?
+
+  // Relationships
+  downloads Download[]
+
+  @@index([type])
+  @@index([status])
+  @@index([seriesId])
+}
+
+model Download {
+  id           String    @id @default(cuid())
+  contentId    String
+  sourceUrl    String    // direct download URL from Real-Debrid
+  downloadType String    // 'http' or 'torrent'
+  progress     Int       @default(0) // 0-100
+  speedBps     BigInt?   // bytes per second
+  etaSeconds   Int?      // estimated time remaining
+  status       String    // queued, downloading, paused, completed, failed
+  errorMessage String?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  // Relationships
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@index([contentId])
+  @@index([status])
+}
+
+model MetadataCache {
+  id         String    @id @default(cuid())
+  externalId String    // IMDB ID, TMDB ID, etc.
+  source     String    // 'tmdb', 'imdb', 'tvdb'
+  data       String    // JSON stringified metadata
+  expiresAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@unique([externalId, source])
+  @@index([source])
+}
+
+model Setting {
+  key       String   @id
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LegalAcceptance {
+  id           String   @id @default(cuid())
+  version      String   // Legal notice version accepted
+  accepted     Boolean
+  timestamp    DateTime @default(now())
+  userAgent    String?
+  ipAddress    String?  // For audit purposes only
+  
+  @@index([version])
+  @@index([timestamp])
+}
+
+model RealDebridToken {
+  id           String    @id @default(cuid())
+  accessToken  String    // Encrypted Real-Debrid access token
+  refreshToken String?   // Encrypted refresh token
+  expiresAt    DateTime?
+  scope        String?
+  tokenType    String    @default("Bearer")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  // User identification (for multi-user support later)
+  userId       String?   
+  
+  @@index([userId])
+}
