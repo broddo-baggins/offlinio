@@ -1,5 +1,12 @@
 # Offlinio Project Overview
 
+## ⚠️ Platform Architecture Update (September 2025)
+
+**Important:** Offlinio requires a Node.js server component:
+- ✅ **Desktop** (Windows/Mac/Linux): Runs locally, full features
+- ⚠️ **Mobile** (Android): Requires desktop server on same network
+- ❌ **iOS**: Not supported due to platform restrictions
+
 ## Project Structure
 
 This document provides an overview of the organized project structure for Offlinio - Personal Media Downloader for Stremio.

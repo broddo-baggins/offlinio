@@ -10,18 +10,22 @@ A complete, runnable Stremio addon for automatic offline downloads with zero use
 ## 🎯 **Final Architecture**
 
 ### **Core Concept**
-- **Single Stremio Addon** - Everything runs in one process on port 11471
+- **Single Stremio Addon** - Runs as Node.js server on port 11471
+- **Desktop-First Architecture** - Full features on Windows/Mac/Linux
 - **Zero Configuration** - No user setup, just install and use
 - **Auto-Detection** - Automatically finds debrid services (Real-Debrid, AllDebrid, etc.)
-- **One-Click Downloads** - "📥 Download for Offline" button on all content
+- **One-Click Downloads** - "Download for Offline" button on all content
 - **Legal-First** - Built-in compliance with Israeli law and international standards
 
 ### **User Experience**
-1. **Install addon** → Legal notice (one-time acceptance)
-2. **Find content in Stremio** → See download button
-3. **Click download** → Auto-detects available services
-4. **Content downloads** → Appears in Offlinio library
-5. **Play offline** → Stream from local storage
+1. **Desktop: Install & run Offlinio** → Starts local server
+2. **Add addon to Stremio** → Legal notice (one-time acceptance)
+3. **Find content in Stremio** → See download button
+4. **Click download** → Auto-detects available services
+5. **Content downloads** → Appears in Offlinio library
+6. **Play offline** → Stream from local storage
+
+**Note:** Mobile devices require desktop server running on same network
 
 ---
 
@@ -146,13 +150,13 @@ npm run dev
 
 ## 📱 **Platform Support**
 
-| Platform | Status | Notes |
-|----------|--------|-------|
-| **Windows** | ✅ Full Support | All features work |
-| **macOS** | ✅ Full Support | All features work |
-| **Linux** | ✅ Full Support | All features work |
-| **iOS** | ⚠️ Limited | Stremio iOS localhost issues |
-| **Android** | ✅ Supported | Via network access |
+| Platform | Status | Architecture | Requirements |
+|----------|--------|--------------|--------------|
+| **Windows** | ✅ Full Support | Runs locally on computer | Just the computer |
+| **macOS** | ✅ Full Support | Runs locally on computer | Just the computer |
+| **Linux** | ✅ Full Support | Runs locally on computer | Just the computer |
+| **Android** | ⚠️ Network Only | Connects to desktop server | Computer must be running |
+| **iOS** | ❌ Not Supported | Cannot reach local servers | Technical limitation |
 
 ---
 
@@ -233,5 +237,10 @@ Ready to start new chat for:
 - **Mobile platform improvements**
 
 **Status: 🟢 READY FOR PRODUCTION TESTING**
+
+**Architecture Reality:**
+- Desktop: Complete solution, runs locally
+- Mobile: Requires desktop server on network
+- Pure mobile-native: Not possible with current Stremio limitations
 
 The foundation is complete and solid! 🚀

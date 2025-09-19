@@ -168,6 +168,164 @@ Based on SDK analysis, we chose a **single addon architecture** that:
 
 ---
 
+## Technical Architecture Deep Dive
+
+### **🏗️ System Components & Data Flow**
+
+```typescript
+// COMPONENT ARCHITECTURE
+┌─────────────────────────────────────────────────────────────┐
+│                    USER'S SINGLE DEVICE                     │
+├─────────────────────────────────────────────────────────────┤
+│ ┌─────────────────┐    ┌─────────────────┐                  │
+│ │   Stremio App   │◄──►│ Offlinio Server │                  │
+│ │   (Frontend)    │    │   (Backend)     │                  │
+│ └─────────────────┘    └─────────────────┘                  │
+│         │                       │                          │
+│         │ HTTP Requests          │ File System Access       │
+│         │ (127.0.0.1:11471)      │                          │
+│         ▼                       ▼                          │
+│ ┌─────────────────┐    ┌─────────────────┐                  │
+│ │  Stream Player  │    │ Downloaded Files│                  │
+│ │   (Video UI)    │    │   (Movies/TV)   │                  │
+│ └─────────────────┘    └─────────────────┘                  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### **📡 Network Architecture**
+
+#### **Desktop Mode (Localhost)**
+```
+Stremio Desktop ──HTTP──► localhost:11471 ──FileSystem──► /Movies/
+     ▲                        │                              │
+     │                        │ Real-Debrid API              │
+     │                        ▼                              │
+     └──HTTP Stream────── Downloaded File ◄─────────────────┘
+```
+
+#### **Mobile Mode (Network)**  
+```
+Phone: Stremio Mobile ──WiFi──► 192.168.1.100:11471
+                                      │
+Computer: Offlinio Server ──FileSystem──► /Movies/
+               │
+               └──Real-Debrid API──► HTTPS Download
+```
+
+### **⚙️ Protocol Translation Engine**
+
+Our addon acts as a **protocol bridge** between Stremio's limited capabilities and advanced download protocols:
+
+```typescript
+// PROTOCOL FLOW DIAGRAM
+User Clicks "Download for Offline"
+           │
+           ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 1: Content ID Resolution                               │
+│ tt1234567:1:2 → IMDB ID + Season + Episode                  │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 2: Source Discovery (Comet Integration)                │
+│ IMDB ID → Best Magnet Link (same as Stremio sees)           │
+│ Result: magnet:?xt=urn:btih:abc123...                       │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 3: Protocol Translation (Real-Debrid)                  │
+│ magnet:?xt=... → https://download.real-debrid.com/file.mp4  │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 4: Local Download & Storage                            │
+│ HTTPS Download → /Movies/Title (Year).mp4                   │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 5: Local HTTP Serving                                  │
+│ /Movies/file.mp4 → http://localhost:11471/files/file.mp4    │
+└─────────────────────┬───────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 6: Stremio Stream Integration                          │
+│ Appears as "Play Offline (1080p)" in stream selection       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### **🔄 Database Schema & Relationships**
+
+```sql
+-- CONTENT TRACKING SYSTEM
+Content Table:
+├── id (contentId from Stremio)     → "tt1234567" or "tt1234567:1:2"
+├── type (movie/series)             → Content classification
+├── title, year, season, episode    → Metadata
+├── filePath                        → "/Movies/Title (Year).mp4"
+├── status                          → downloading/completed/failed
+├── progress                        → 0-100%
+└── seriesId                        → Groups episodes together
+
+Download Table:
+├── id (downloadId)                 → Unique download job
+├── contentId                       → Foreign key to Content
+├── sourceUrl                       → Real-Debrid HTTPS URL
+├── downloadType                    → "http" or "magnet"
+├── progress, speedBps, etaSeconds  → Real-time metrics
+├── status                          → queued/downloading/completed/failed
+└── timestamps                      → startedAt, completedAt
+
+-- RELATIONSHIP EXAMPLES
+Movie Content:
+{
+  id: "tt0133093",
+  type: "movie", 
+  title: "The Matrix",
+  year: 1999,
+  filePath: "Movies/The Matrix (1999).mp4",
+  status: "completed"
+}
+
+Series Episodes:
+{
+  id: "tt0903747:1:1",
+  type: "series",
+  title: "Breaking Bad",
+  seriesId: "tt0903747", 
+  season: 1,
+  episode: 1,
+  filePath: "Series/Breaking Bad/Season 1/Breaking Bad S01E01 - Pilot.mp4"
+}
+```
+
+### **📂 File System Organization**
+
+```
+STORAGE_ROOT/
+├── Movies/
+│   ├── The Matrix (1999).mp4
+│   ├── Inception (2010).mkv
+│   └── Interstellar (2014).mp4
+├── Series/
+│   ├── Breaking Bad/
+│   │   ├── Season 1/
+│   │   │   ├── Breaking Bad S01E01 - Pilot.mp4
+│   │   │   └── Breaking Bad S01E02 - Cat's in the Bag.mp4
+│   │   └── Season 2/...
+│   └── Game of Thrones/...
+└── .offlinio/
+    ├── offlinio.db              → SQLite metadata
+    ├── logs/                    → Application logs
+    └── cache/                   → Temporary files
+```
+
+---
+
 ## How It Works
 
 ### User Experience Flow
@@ -286,15 +444,105 @@ npm run dev
 
 ---
 
-## Platform Support
+## Platform Support & Architecture
 
-| Platform | Status | Notes |
-|----------|---------|-------|
-| **Windows** | Full Support | All features available |
-| **macOS** | Full Support | All features available |
-| **Linux** | Full Support | All features available |
-| **Android** | Supported | Via network access to local server |
-| **iOS** | Limited | Stremio iOS cannot reach localhost |
+### **💻 Desktop Platforms (Primary Targets)**
+
+| Platform | Status | Requirements |
+|----------|---------|--------------|
+| **Windows** | ✅ Full Support | Runs locally - no server needed |
+| **macOS** | ✅ Full Support | Runs locally - no server needed |
+| **Linux** | ✅ Full Support | Runs locally - no server needed |
+
+**Desktop Architecture:**
+```
+Your Computer:
+├── Stremio Desktop App          → Plays content
+├── Offlinio Server (localhost)  → Downloads & serves files  
+├── Downloaded Files (local)     → Stored on your drive
+└── No internet required for playback
+```
+
+### **📱 Mobile Platforms (Network-Dependent)**
+
+| Platform | Status | Requirements | Limitations |
+|----------|---------|--------------|-------------|
+| **Android** | ⚠️ Network Access | Desktop computer running Offlinio | Computer must stay on |
+| **iOS** | ❌ Not Supported | iOS Stremio cannot reach network servers | Technical limitation |
+
+**Mobile Architecture:**
+```
+Your Phone (Android):
+├── Stremio Mobile App           → Plays content
+└── Connects to: 192.168.1.100:11471
+
+Your Computer (MUST BE RUNNING):
+├── Offlinio Server              → Downloads & serves files
+├── Downloaded Files             → Stored on computer
+└── Must be on same Wi-Fi network
+```
+
+### **🏠 Deployment Options & Hosting Requirements**
+
+#### **Option 1: Personal Desktop (Recommended)**
+```
+✅ NO SERVER REQUIRED - Everything runs on your computer!
+
+Your Computer:
+├── Download & run Offlinio
+├── Files stored locally  
+├── Works offline
+└── Zero monthly costs
+
+Perfect for: Personal use, privacy, offline viewing
+```
+
+#### **Option 2: Local Network (Multi-Device)**
+```
+⚠️ Your computer becomes the "server" for your devices
+
+Your Computer (acts as server):
+├── Runs Offlinio 24/7
+├── Downloads & stores files
+└── Serves to other devices
+
+Your Phone/Tablet:
+├── Connects via Wi-Fi
+└── Streams from your computer
+
+Perfect for: Household sharing, multiple devices
+```
+
+#### **Option 3: Self-Hosted Server (Advanced)**
+```
+🔧 Optional for power users only
+
+Your Home Server/NAS:
+├── Run Offlinio on server
+├── Central storage
+└── Always available
+
+All Devices:
+└── Connect to home server
+
+Perfect for: Tech enthusiasts, always-on setup
+```
+
+**✅ What Users Need:**
+- **Desktop**: Just their computer (Windows/Mac/Linux) 
+- **Mobile**: Their computer + phone on same Wi-Fi
+- **No cloud hosting required**
+- **No VPS or external servers needed**
+- **No monthly hosting costs**
+- **No technical server management**
+
+**❌ What Users DON'T Need:**
+- External cloud hosting
+- AWS/Google Cloud/Azure
+- Monthly hosting fees  
+- Public IP addresses
+- Domain names
+- SSL certificates
 
 ---
 
