@@ -1,7 +1,7 @@
 {
   "name": "offlinio",
   "version": "0.1.0",
-  "description": "Offlinio - Personal Media Downloader for Stremio (Single Addon Architecture)",
+  "description": "Offlinio - Universal Personal Media Downloader for Stremio (Platform-Agnostic Architecture with Mobile, Web, and TV Support)",
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
@@ -32,12 +32,20 @@
   },
   "keywords": [
     "stremio",
-    "addon",
+    "addon", 
     "offline",
     "downloads",
     "real-debrid",
     "media",
-    "personal-media-downloader"
+    "personal-media-downloader",
+    "mobile",
+    "pwa",
+    "android",
+    "ios",
+    "universal",
+    "cross-platform",
+    "android-tv",
+    "companion-app"
   ],
   "author": "Offlinio Team",
   "license": "MIT",

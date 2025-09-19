@@ -140,9 +140,18 @@ async function startServer() {
     app.use('/api/legal', legalRouter);
     app.use('/api/downloads', downloadsRouter);
 
+    // Mobile API routes
+    const { mobileApiRouter } = await import('./routes/mobile-api.js');
+    app.use('/mobile', mobileApiRouter);
+
     // Setup routes
     const { createSetupRouter } = await import('./routes/setup.js');
     app.use('/api/setup', createSetupRouter(prisma));
+
+    // PWA Manifest
+    app.get('/manifest.json', (req, res) => {
+      res.sendFile(path.join(process.cwd(), 'src', 'pwa-manifest.json'));
+    });
 
     // Static web UI
     app.use('/ui', express.static(path.join(process.cwd(), 'src', 'ui')));

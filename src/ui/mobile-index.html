@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Offlinio - Personal Media Downloader</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Download and manage your personal media collection for offline viewing">
+    <meta name="theme-color" content="#4ecdc4">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Offlinio">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- PWA Links -->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="/ui/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/ui/icons/icon-192x192.png">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/ui/mobile.css">
+    
+    <!-- Prevent zoom on iOS -->
+    <style>
+        input, textarea, select {
+            font-size: 16px; /* Prevent zoom on iOS */
+        }
+    </style>
+</head>
+<body class="mobile-safe-area-top mobile-safe-area-bottom">
+    <!-- Refresh Indicator -->
+    <div class="mobile-refresh-indicator">
+        <div class="mobile-spinner"></div>
+        Pull to refresh
+    </div>
+
+    <div class="mobile-container">
+        <!-- Mobile Header -->
+        <div class="mobile-header">
+            <h1>Offlinio</h1>
+            <p>Your Personal Media Library</p>
+        </div>
+
+        <!-- Legal Notice (shown if not accepted) -->
+        <div id="legalNotice" class="legal-notice" style="display: none;">
+            <h3>🛡️ Legal Use Only</h3>
+            <p><strong>You must have legal rights to download any content.</strong></p>
+            
+            <p><strong>✅ Acceptable Uses:</strong></p>
+            <ul>
+                <li>Personal backups of content you own</li>
+                <li>Public domain materials</li>
+                <li>Creative Commons licensed content</li>
+                <li>Content from your authorized debrid services</li>
+                <li>Your own user-generated content</li>
+            </ul>
+
+            <p><strong>❌ This tool will NOT:</strong></p>
+            <ul>
+                <li>Bypass DRM or access controls</li>
+                <li>Provide links to unauthorized content</li>
+                <li>Index or catalog content sources</li>
+            </ul>
+
+            <div style="margin-top: 20px;">
+                <button class="mobile-btn" onclick="acceptLegalNotice()">I Understand and Agree</button>
+                <button class="mobile-btn mobile-btn-secondary" onclick="window.close()" style="margin-left: 10px;">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Main App Content -->
+        <div id="mainContent" style="display: none;">
+            <!-- Statistics Grid -->
+            <div class="mobile-stats">
+                <div class="mobile-stat-card">
+                    <h3 id="statMovies">0</h3>
+                    <p>Movies</p>
+                </div>
+                <div class="mobile-stat-card">
+                    <h3 id="statSeries">0</h3>
+                    <p>Episodes</p>
+                </div>
+                <div class="mobile-stat-card">
+                    <h3 id="statSize">0 GB</h3>
+                    <p>Storage</p>
+                </div>
+                <div class="mobile-stat-card">
+                    <h3 id="statActive">0</h3>
+                    <p>Active</p>
+                </div>
+            </div>
+
+            <!-- Downloads Section -->
+            <div class="mobile-downloads">
+                <div class="mobile-section-header">
+                    <h2>Downloads</h2>
+                    <div class="mobile-actions">
+                        <button class="mobile-btn mobile-btn-small mobile-btn-secondary" onclick="offlinio?.refreshData()">
+                            🔄
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Downloads List -->
+                <div id="mobileDownloadsList">
+                    <div class="mobile-loading">
+                        <div class="mobile-spinner"></div>
+                        Loading downloads...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="mobile-fab" onclick="openAddToStremio()" title="Add to Stremio">
+        📺
+    </button>
+
+    <!-- Scripts -->
+    <script src="/ui/mobile.js"></script>
+    <script>
+        // Global functions for UI interactions
+        async function acceptLegalNotice() {
+            try {
+                const response = await fetch('/api/legal/accept', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    document.getElementById('legalNotice').style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'block';
+                    
+                    // Initialize the mobile app
+                    if (window.offlinio) {
+                        await window.offlinio.loadInitialData();
+                    }
+                } else {
+                    alert('Failed to accept legal notice. Please try again.');
+                }
+            } catch (error) {
+                console.error('Failed to accept legal notice:', error);
+                alert('Network error. Please check your connection and try again.');
+            }
+        }
+
+        function openAddToStremio() {
+            const manifestUrl = window.location.origin + '/manifest.json';
+            const stremioUrl = `https://app.strem.io/shell-v4.4/?addon=${encodeURIComponent(manifestUrl)}`;
+            
+            if (confirm('Open Stremio Web to install the Offlinio addon?')) {
+                window.open(stremioUrl, '_blank');
+            }
+        }
+
+        // Check legal notice status on load
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/legal/status');
+                const data = await response.json();
+                
+                if (data.accepted) {
+                    document.getElementById('mainContent').style.display = 'block';
+                } else {
+                    document.getElementById('legalNotice').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Failed to check legal status:', error);
+                // Show legal notice by default if we can't check
+                document.getElementById('legalNotice').style.display = 'block';
+            }
+        });
+
+        // Install prompt for PWA
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            
+            // Show install button or banner
+            showInstallPrompt();
+        });
+
+        function showInstallPrompt() {
+            const installBanner = document.createElement('div');
+            installBanner.className = 'mobile-toast mobile-toast-success show';
+            installBanner.innerHTML = `
+                Install Offlinio as an app?
+                <button onclick="installPWA()" style="margin-left: 8px; background: white; color: #4ecdc4; border: none; padding: 4px 8px; border-radius: 4px;">Install</button>
+                <button onclick="dismissInstall()" style="margin-left: 4px; background: transparent; color: white; border: 1px solid white; padding: 4px 8px; border-radius: 4px;">Later</button>
+            `;
+            document.body.appendChild(installBanner);
+
+            window.installBanner = installBanner;
+        }
+
+        function installPWA() {
+            if (deferredPrompt) {
+                // Show the prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the PWA install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+            dismissInstall();
+        }
+
+        function dismissInstall() {
+            if (window.installBanner) {
+                window.installBanner.remove();
+            }
+        }
+
+        // Handle PWA install
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('Offlinio PWA installed successfully');
+            if (window.offlinio) {
+                window.offlinio.showToast('App installed successfully!', 'success');
+            }
+        });
+    </script>
+</body>
+</html>

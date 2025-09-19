@@ -1,0 +1,156 @@
+{
+  "name": "Offlinio - Personal Media Downloader",
+  "short_name": "Offlinio",
+  "description": "Download and manage your personal media collection for offline viewing",
+  "start_url": "/ui/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#4ecdc4",
+  "background_color": "#1a1a1a",
+  "categories": ["entertainment", "utilities"],
+  "icons": [
+    {
+      "src": "/ui/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/ui/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/ui/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/ui/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/ui/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/ui/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/ui/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/ui/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "View Downloads",
+      "short_name": "Downloads",
+      "description": "View your download queue and completed files",
+      "url": "/ui/?tab=downloads",
+      "icons": [
+        {
+          "src": "/ui/icons/download-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Add to Stremio",
+      "short_name": "Add Addon",
+      "description": "Install Offlinio addon in Stremio",
+      "url": "/manifest.json",
+      "icons": [
+        {
+          "src": "/ui/icons/stremio-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "short_name": "Settings",
+      "description": "Configure download settings and storage",
+      "url": "/ui/?tab=settings",
+      "icons": [
+        {
+          "src": "/ui/icons/settings-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/ui/screenshots/mobile-downloads.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/ui/screenshots/desktop-library.png", 
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.offlinio.companion",
+      "url": "https://play.google.com/store/apps/details?id=com.offlinio.companion"
+    }
+  ],
+  "prefer_related_applications": false,
+  "scope": "/",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "file_handlers": [
+    {
+      "action": "/ui/",
+      "accept": {
+        "application/x-bittorrent": [".torrent"],
+        "application/x-magnet": []
+      }
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "magnet",
+      "url": "/ui/?magnet=%s"
+    }
+  ],
+  "share_target": {
+    "action": "/ui/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "torrent_file",
+          "accept": ["application/x-bittorrent", ".torrent"]
+        }
+      ]
+    }
+  }
+}
