@@ -1,4 +1,8 @@
-# 🛠️ Local Development & Testing Guide
+# 🛠️ Universal Platform Development & Testing Guide
+
+## 🌍 **Developing for ALL Platforms Simultaneously**
+
+This guide covers developing for Offlinio's revolutionary universal platform architecture, where a single codebase serves Desktop, Mobile, Web, and Android TV platforms identically.
 
 Complete guide to run, test, and develop Offlinio locally with your existing Stremio setup.
 

@@ -1,4 +1,14 @@
-# 🎬 Offlinio User Stories - Northstar Document
+# 🎬 Offlinio User Stories - Universal Platform Experience
+
+## 🌍 **Revolutionary Platform-Agnostic User Experience**
+
+**Target User Profile - NOW UNIVERSAL:**
+- ✅ Has Stremio installed on **ANY PLATFORM** (Desktop, Mobile, Web, Android TV)
+- ✅ Same **universal addon URL** works everywhere: `http://127.0.0.1:11471/manifest.json`
+- ✅ Identical experience across **ALL platforms** with platform optimizations
+- ✅ Revolutionary **mobile PWA** and companion app support
+- ✅ Real-time **cross-platform sync** of downloads and progress
+- ✅ **Zero configuration** - just install and use on any device
 
 **Target User Profile:**
 - ✅ Has Stremio installed with **Comet + Torrentio + Trakt** addons working
