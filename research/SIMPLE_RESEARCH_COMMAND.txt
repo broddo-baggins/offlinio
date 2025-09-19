@@ -1,0 +1,23 @@
+DIRECT GPT RESEARCHER QUERY:
+
+Research comprehensive technical solutions for implementing native offline video downloads in Stremio mobile apps (iOS/Android) without requiring desktop server. Focus on: 1) iOS URLSession background downloads and file system APIs, 2) Android DownloadManager and WorkManager solutions, 3) Progressive Web App capabilities on mobile browsers, 4) WebAssembly download processing, 5) Real-world examples from VLC/Documents/NewPipe apps, 6) Stremio mobile integration methods, 7) Cross-platform React Native/Flutter approaches, 8) Cloud storage intermediary workarounds. Provide specific API names, code examples, implementation timelines, and app store compliance considerations. Priority on actionable solutions that exist today, not theoretical approaches.
+
+---
+
+ALTERNATIVE SHORTER VERSION:
+
+Technical research: How to enable native downloads in Stremio mobile apps without desktop server? Analyze iOS/Android APIs, PWA capabilities, WebAssembly solutions, successful mobile download app implementations, and cross-platform frameworks. Need specific technical approaches, code examples, and implementation roadmaps for background video downloads with Stremio integration.
+
+---
+
+GITHUB SEARCH KEYWORDS FOR ADDITIONAL RESEARCH:
+- "mobile background downloads iOS Android"
+- "React Native background download"
+- "Flutter download manager"
+- "PWA file system access mobile"
+- "WebAssembly mobile downloads"
+- "Stremio mobile integration"
+- "iOS URLSession background"
+- "Android DownloadManager"
+- "mobile offline video app"
+- "Termux nodejs mobile"

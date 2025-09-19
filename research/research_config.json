@@ -1,0 +1,60 @@
+{
+  "research_task": "mobile_native_stremio_downloads",
+  "query": "How to implement native offline downloads for Stremio mobile apps without requiring desktop server - technical workarounds for iOS and Android platform restrictions",
+  "research_type": "research_report",
+  "source_urls": [
+    "https://developer.apple.com/documentation/foundation/urlsession",
+    "https://developer.android.com/reference/android/app/DownloadManager",
+    "https://github.com/Stremio/stremio-web",
+    "https://github.com/Stremio/stremio-core",
+    "https://developer.mozilla.org/en-US/docs/Web/API/File_System_Access_API",
+    "https://web.dev/file-system-access/",
+    "https://capacitorjs.com/docs/apis/background-mode",
+    "https://reactnative.dev/docs/background-modes",
+    "https://flutter.dev/docs/development/platform-integration/platform-channels"
+  ],
+  "focus_areas": [
+    "iOS background download APIs and URLSession capabilities",
+    "Android DownloadManager and WorkManager implementations", 
+    "Progressive Web App file system access on mobile",
+    "WebAssembly capabilities for mobile browsers",
+    "Stremio mobile app architecture and integration points",
+    "Mobile torrent client implementations and techniques",
+    "Cross-platform mobile download solutions",
+    "Background processing workarounds for mobile platforms",
+    "Mobile app store restrictions and compliance",
+    "Real-world mobile offline download implementations"
+  ],
+  "research_depth": "comprehensive",
+  "max_iterations": 15,
+  "include_sources": true,
+  "tone": "technical",
+  "output_format": "detailed_report",
+  "research_objectives": [
+    "Identify specific mobile APIs that enable background downloads",
+    "Analyze successful mobile apps with offline download features", 
+    "Evaluate PWA and WebAssembly solutions for mobile browsers",
+    "Research Stremio mobile app integration possibilities",
+    "Assess cross-platform development frameworks for mobile downloads",
+    "Investigate cloud-based workarounds and intermediary solutions",
+    "Document technical implementation requirements and complexity",
+    "Provide actionable development roadmap for viable solutions"
+  ],
+  "platforms_focus": [
+    "iOS 15+ native APIs and capabilities",
+    "Android 10+ system services and APIs", 
+    "Mobile browser capabilities and limitations",
+    "Cross-platform mobile development frameworks",
+    "Progressive Web App technologies",
+    "WebAssembly and WASI on mobile platforms"
+  ],
+  "technical_requirements": [
+    "Background file downloads (1-5GB files)",
+    "Integration with existing Stremio mobile apps",
+    "File system access and organization",
+    "No desktop server dependency",
+    "Real-Debrid API integration",
+    "Download progress tracking",
+    "Mobile platform compliance"
+  ]
+}

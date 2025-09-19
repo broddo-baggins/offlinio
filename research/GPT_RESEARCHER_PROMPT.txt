@@ -1,0 +1,93 @@
+RESEARCH TASK: Mobile-Native Stremio Offline Downloads Without Server Dependency
+
+CONTEXT:
+We have built a Stremio addon for offline downloads that currently requires a Node.js server running on desktop. We need to find technical workarounds to enable native downloads directly on mobile devices (iOS/Android) without any desktop server requirement.
+
+CURRENT LIMITATIONS:
+- iOS: Cannot run background processes, limited file system access, sandbox restrictions
+- Android: Stremio app cannot run Node.js servers, limited background processing
+- Both: Stremio mobile apps lack native download APIs
+
+PRIMARY RESEARCH QUESTIONS:
+
+1. PLATFORM WORKAROUNDS:
+What specific iOS APIs, Android APIs, or mobile browser capabilities could enable background downloads and file management for a Stremio-integrated solution? Include API names, permission requirements, and implementation examples.
+
+2. EXISTING SOLUTIONS ANALYSIS:
+How do successful mobile apps (VLC, Documents by Readdle, NewPipe, mobile torrent clients) implement offline downloads? What specific technical approaches, APIs, and architectures do they use?
+
+3. ALTERNATIVE ARCHITECTURES:
+What are viable technical approaches for mobile-native downloads that don't require a desktop server? Consider PWAs, WebAssembly, companion apps, browser extensions, cloud intermediaries, or peer-to-peer solutions.
+
+4. STREMIO INTEGRATION METHODS:
+What are the technical methods to integrate download functionality with Stremio mobile apps? Research Stremio's codebase, API endpoints, URL schemes, and any undocumented features.
+
+5. IMPLEMENTATION ROADMAP:
+For each viable solution identified, provide specific implementation details including required technologies, APIs, development time estimates, and technical complexity.
+
+RESEARCH FOCUS AREAS:
+
+iOS TECHNICAL DEEP DIVE:
+- Background URLSession downloads and background app refresh
+- iOS Shortcuts automation for download workflows  
+- Files app integration and document provider extensions
+- WebKit/Safari progressive web app capabilities
+- TestFlight enterprise features and MDM APIs
+- URL scheme handlers and universal links
+
+ANDROID TECHNICAL DEEP DIVE:
+- DownloadManager system service integration
+- Foreground services and WorkManager for background tasks
+- Storage Access Framework and scoped storage
+- Custom URI schemes and intent filters
+- Termux automation and simplified installation
+- WebView and Chrome Custom Tabs capabilities
+
+CROSS-PLATFORM SOLUTIONS:
+- Progressive Web App file system access
+- WebAssembly for download processing
+- React Native/Flutter background task capabilities
+- Capacitor/Cordova plugin ecosystem
+- Browser extension possibilities for mobile
+- Cloud storage APIs as download intermediaries
+
+CREATIVE TECHNICAL APPROACHES:
+- QR code workflows for download initiation
+- Push notifications for download management
+- Mesh networking and device-to-device transfers
+- Integration with existing mobile download managers
+- Bluetooth/WiFi Direct file transfers
+- Voice assistant integration for hands-free downloads
+
+SPECIFIC TECHNICAL REQUIREMENTS:
+
+Find solutions that can:
+1. Download large video files (1-5GB) in background
+2. Integrate with Stremio's stream selection interface
+3. Organize files in Movies/TV Shows structure
+4. Serve files back to Stremio for playback
+5. Work without requiring desktop server
+6. Handle Real-Debrid or similar service APIs
+7. Provide download progress tracking
+8. Work within mobile platform restrictions
+
+SUCCESS METRICS:
+- Identify at least 2 technically viable approaches for iOS
+- Identify at least 3 technically viable approaches for Android  
+- Provide specific code examples and API documentation
+- Include realistic implementation timelines
+- Address app store approval considerations
+- Consider user experience and setup complexity
+
+OUTPUT FORMAT:
+Please structure the research as:
+1. Executive Summary of Findings
+2. iOS Solutions (ranked by viability)
+3. Android Solutions (ranked by viability)
+4. Cross-Platform Approaches
+5. Implementation Roadmap for Top 3 Solutions
+6. Technical Specifications and Code Examples
+7. Challenges and Limitations Assessment
+8. Recommended Next Steps
+
+RESEARCH DEPTH: Maximum detail with actionable implementation guidance. Focus on real-world solutions that exist today, not theoretical possibilities.
